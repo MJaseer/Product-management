@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Product {{productForm.get('name')?.touched}} </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" size="6" size-sm="12">
+  <form [formGroup]="productForm" (ngSubmit)="addProduct()">
+    <ion-item>
+      <ion-input formControlName="name" type="text" ngDefaultControl label="Name" label-placement="floating"></ion-input>
+    </ion-item>
+    <ion-note *ngIf="name?.errors?.['required'] && name?.dirty" slot="error" color="danger">Name field is
+      required</ion-note>
+    <ion-note *ngIf="name?.errors?.['minlength']" slot="error" color="danger">Name must be at least 2
+      characters</ion-note>
+    <ion-note *ngIf="name?.errors?.['maxlength']" slot="error" color="danger">Name must be less than 30
+      characters</ion-note>
+
+    <ion-item>
+      <ion-input label="Price" required label-placement="floating" ngDefaultControl type="number"
+        formControlName="price"></ion-input>
+    </ion-item>
+    <ion-note *ngIf="price?.errors?.['required'] && price?.dirty" slot="error" color="danger">Price field is
+      required</ion-note>
+    <ion-note *ngIf="price?.errors?.['min']" slot="error" color="danger">Price must be greater than 0</ion-note>
+    <ion-item>
+      <ion-input label="Category" required label-placement="floating" ngDefaultControl type="text"
+        formControlName="category"></ion-input>
+    </ion-item>
+    <ion-note *ngIf="category?.errors?.['required'] && category?.dirty" slot="error" color="danger">Category field is
+      required</ion-note>
+    <ion-note *ngIf="category?.errors?.['minlength']" slot="error" color="danger">Category must be at least 2
+      characters</ion-note>
+    <ion-note *ngIf="category?.errors?.['maxlength']" slot="error" color="danger">Category must be less than 30
+      characters</ion-note>
+
+    <ion-item>
+      <ion-checkbox type="checkbox" ngDefaultControl formControlName="inStock">Stock </ion-checkbox>
+    </ion-item>
+
+    <div *ngIf="formError()" class="ion-padding-top ion-text-center">
+      <ion-text color="danger">{{formError()}}</ion-text>
+    </div>
+
+    <ion-button type="submit" expand="block" [disabled]="isSubmitting()">
+      <span *ngIf="isSubmitting()">Adding...</span>
+      <span *ngIf="!isSubmitting()">Add Product</span>
+    </ion-button>
+  </form>
+</ion-content>

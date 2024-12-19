@@ -25,3 +25,17 @@
 #container a {
   text-decoration: none;
 }
+
+.in-stock {
+  color: green;
+  font-weight: bold;
+}
+
+.out-of-stock {
+  color: red;
+  font-weight: bold;
+}
+
+.alert-wrapper{
+  border: white !important;
+}

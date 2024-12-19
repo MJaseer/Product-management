@@ -1,0 +1,39 @@
+{
+  "products": [
+    {
+      "id": "2",
+      "name": "name 2",
+      "price": "222",
+      "category": "cate2 edit",
+      "inStock": true
+    },
+    {
+      "id": "3",
+      "name": "name 3",
+      "price": "333",
+      "category": "cate3 edit",
+      "inStock": false
+    },
+    {
+      "id": "4",
+      "name": "name 4",
+      "price": "444",
+      "category": "cate4 edit",
+      "inStock": true
+    },
+    {
+      "id": "5",
+      "name": "name 5",
+      "price": "555",
+      "category": "cat6",
+      "inStock": true
+    },
+    {
+      "id": "6",
+      "name": "Sixth name",
+      "price": "666",
+      "category": "cat6",
+      "inStock": true
+    }
+  ]
+}

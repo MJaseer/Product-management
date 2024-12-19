@@ -1,20 +1,137 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6" class="ion-text-start"> <ion-title>Products</ion-title>
+        </ion-col>
+        <ion-col size="6" class="ion-text-end"> <ion-title routerLink="/add-product">Add Product</ion-title>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid>
+    <ion-row size="12" class="ion-justify-content-end">
+      <ion-col class="ion-justify-content-end" size="3">
+        <ion-item>
+          <ion-select (ionChange)="filterProduct()" class="always-flip" toggleIcon="caret-down-sharp"
+            interface="popover" label="Filter Product" placeholder="Select Category" [(ngModel)]="filter">
+            @for (item of filterOptions(); track $index) {
+            <ion-select-option [value]="item">{{item}} </ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  @defer(when !loading()){
+  <ion-grid>
+    <ion-row>
+      <!-- Table Headers -->
+      <ion-col size-lg="1" size="auto"><strong>Index</strong></ion-col>
+      <ion-col size-lg="2" size="auto"><strong>Name</strong></ion-col>
+      <ion-col size-lg="2" size="auto"><strong>Price</strong></ion-col>
+      <ion-col size-lg="2" size="auto"><strong>Category</strong></ion-col>
+      <ion-col size-lg="2" size="auto"><strong>Status</strong></ion-col>
+      <ion-col size-lg="1" size="auto"><strong>Edit</strong></ion-col>
+      <ion-col size-lg="1" size="auto"><strong>Delete</strong> </ion-col>
+    </ion-row>
+    @for (product of productsFilter(); track $index) {
+    <form [formGroup]="productForm" (ngSubmit)="onSave(product)">
+      <ion-row>
+        <ion-col size-lg="1" size="auto" class="ion-justify-content-end">
+          {{$index}}
+        </ion-col>
+        <ion-col size-lg="2" size="auto" class="ion-justify-content-end">
+          <!-- Editable Name -->
+          <ion-input label="Name" label-placement="floating" fill="outline" *ngIf="editingProduct() === product"
+            [(ngModel)]="product.name" formControlName="name"></ion-input>
+          <span *ngIf="editingProduct() !== product">{{ product.name }}</span>
+          <ion-note *ngIf="name?.errors?.['required'] && name?.dirty" slot="error" color="danger">Name field is
+            required</ion-note>
+          <ion-note *ngIf="name?.errors?.['minlength']" slot="error" color="danger">Name must be at least 2
+            characters</ion-note>
+          <ion-note *ngIf="name?.errors?.['maxlength']" slot="error" color="danger">Name must be less than 30
+            characters</ion-note>
+        </ion-col>
+        <ion-col size-lg="2" size="auto" class="ion-justify-content-end">
+          <!-- Editable Price -->
+          <ion-input label="Price" label-placement="floating" fill="outline" *ngIf="editingProduct() === product"
+            [(ngModel)]="product.price" type="number" formControlName="price"></ion-input>
+          <span *ngIf="editingProduct() !== product">{{ product.price | currency }}</span>
+          <ion-note *ngIf="price?.errors?.['required'] && price?.dirty" slot="error" color="danger">Price field is
+            required</ion-note>
+          <ion-note *ngIf="price?.errors?.['min']" slot="error" color="danger">Price must be greater than 0</ion-note>
+        </ion-col>
+        <ion-col size-lg="2" size="auto" class="ion-justify-content-end">
+          <!-- Editable Category -->
+          <ion-input formControlName="category" label="Category" label-placement="floating" fill="outline"
+            *ngIf="editingProduct() === product" [(ngModel)]="product.category"></ion-input>
+          <span *ngIf="editingProduct() !== product">{{ product.category }}</span>
+          <ion-note *ngIf="category?.errors?.['required'] && category?.dirty" slot="error" color="danger">Category field
+            is required</ion-note>
+          <ion-note *ngIf="category?.errors?.['minlength']" slot="error" color="danger">Category must be at least 2
+            characters</ion-note>
+          <ion-note *ngIf="category?.errors?.['maxlength']" slot="error" color="danger">Category must be less than 30
+            characters</ion-note>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+        </ion-col>
+        <ion-col size-lg="2" size="auto" class="ion-justify-content-end">
+          <!-- Editable Status -->
+           @if(product.inStock){
+            
+            <ion-toggle (click)="changeStock()" aria-checked="true" [checked]="true"
+            *ngIf="editingProduct() === product" ngDefaultControl> </ion-toggle>
+           } @else {
+            <ion-toggle (click)="changeStock()" aria-checked="false"
+            *ngIf="editingProduct() === product" ngDefaultControl> </ion-toggle>
+           }
+          
+          <ion-badge *ngIf="editingProduct() !== product" [color]="product.inStock ? 'success' : 'danger'">
+            {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
+          </ion-badge>
+        </ion-col>
+        <ion-col size-lg="1" size="auto" class="ion-justify-content-end">
+          <!-- Edit/Save Button -->
+          <ion-button size="small" color="primary" *ngIf="editingProduct() !== product" (click)="onEdit(product)">
+            Edit
+          </ion-button>
+          <ion-button size="small" color="success" *ngIf="editingProduct() === product" (click)="onSave(product)">
+            Save
+          </ion-button>
+          <ion-button size="small" color="medium" *ngIf="editingProduct() === product" (click)="onCancel()">
+            Cancel
+          </ion-button>
+        </ion-col>
+        <ion-col size-lg="1" size="auto" class="ion-justify-content-end">
+          <ion-button size="small" color="danger" (click)="deleteProduct(product.id)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
+    } @empty {
+    @if (!loading()) {
+    <ion-item line="none">
+      <ion-label class="ion-text-center">No Products</ion-label>
+    </ion-item>
+    }
+    }
+  </ion-grid>
+  } @placeholder {
+  <ion-list>
+    @for (i of dummyArray; track $index) {
+    <ion-item lines="none" class="ion-padding-bottom">
+      <ion-avatar slot="start">
+        <ion-skeleton-text></ion-skeleton-text>
+      </ion-avatar>
+      <ion-skeleton-text animated style="height: 40px;"></ion-skeleton-text>
+    </ion-item>
+    }
+  </ion-list>
+  } @error {
+  <ion-alert header="Error" [message]="error" isOpen="true" [buttons]="['Ok']"></ion-alert>
+  }
 </ion-content>
