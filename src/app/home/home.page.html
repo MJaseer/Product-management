@@ -47,48 +47,55 @@
         <ion-col size-lg="2" size="auto" class="ion-justify-content-end">
           <!-- Editable Name -->
           <ion-input label="Name" label-placement="floating" fill="outline" *ngIf="editingProduct() === product"
-            [(ngModel)]="product.name" formControlName="name"></ion-input>
+            [(ngModel)]="product.name" formControlName="name" ngDefaultControl></ion-input>
           <span *ngIf="editingProduct() !== product">{{ product.name }}</span>
-          <ion-note *ngIf="name?.errors?.['required'] && name?.dirty" slot="error" color="danger">Name field is
-            required</ion-note>
-          <ion-note *ngIf="name?.errors?.['minlength']" slot="error" color="danger">Name must be at least 2
+
+          @if(editingProduct() === product){
+          <ion-note *ngIf="name?.errors?.['required'] && name?.dirty" color="danger">
+            Name field is required
+          </ion-note>
+          <ion-note *ngIf="name?.errors?.['minlength']" color="danger">Name must be at least 2
             characters</ion-note>
-          <ion-note *ngIf="name?.errors?.['maxlength']" slot="error" color="danger">Name must be less than 30
+          <ion-note *ngIf="name?.errors?.['maxlength']" color="danger">Name must be less than 30
             characters</ion-note>
+          }
         </ion-col>
         <ion-col size-lg="2" size="auto" class="ion-justify-content-end">
           <!-- Editable Price -->
           <ion-input label="Price" label-placement="floating" fill="outline" *ngIf="editingProduct() === product"
             [(ngModel)]="product.price" type="number" formControlName="price"></ion-input>
           <span *ngIf="editingProduct() !== product">{{ product.price | currency }}</span>
-          <ion-note *ngIf="price?.errors?.['required'] && price?.dirty" slot="error" color="danger">Price field is
+          @if(editingProduct() === product){
+          <ion-note *ngIf="price?.errors?.['required'] && price?.dirty" color="danger">Price field is
             required</ion-note>
-          <ion-note *ngIf="price?.errors?.['min']" slot="error" color="danger">Price must be greater than 0</ion-note>
+          <ion-note *ngIf="price?.errors?.['min']" color="danger">Price must be greater than 0</ion-note>
+          }
         </ion-col>
         <ion-col size-lg="2" size="auto" class="ion-justify-content-end">
           <!-- Editable Category -->
           <ion-input formControlName="category" label="Category" label-placement="floating" fill="outline"
             *ngIf="editingProduct() === product" [(ngModel)]="product.category"></ion-input>
           <span *ngIf="editingProduct() !== product">{{ product.category }}</span>
-          <ion-note *ngIf="category?.errors?.['required'] && category?.dirty" slot="error" color="danger">Category field
+          @if(editingProduct() === product){
+          <ion-note *ngIf="category?.errors?.['required'] && category?.dirty" color="danger">Category field
             is required</ion-note>
-          <ion-note *ngIf="category?.errors?.['minlength']" slot="error" color="danger">Category must be at least 2
+          <ion-note *ngIf="category?.errors?.['minlength']" color="danger">Category must be at least 2
             characters</ion-note>
-          <ion-note *ngIf="category?.errors?.['maxlength']" slot="error" color="danger">Category must be less than 30
+          <ion-note *ngIf="category?.errors?.['maxlength']" color="danger">Category must be less than 30
             characters</ion-note>
-
+          }
         </ion-col>
         <ion-col size-lg="2" size="auto" class="ion-justify-content-end">
           <!-- Editable Status -->
-           @if(product.inStock){
-            
-            <ion-toggle (click)="changeStock()" aria-checked="true" [checked]="true"
-            *ngIf="editingProduct() === product" ngDefaultControl> </ion-toggle>
-           } @else {
-            <ion-toggle (click)="changeStock()" aria-checked="false"
-            *ngIf="editingProduct() === product" ngDefaultControl> </ion-toggle>
-           }
-          
+          @if(product.inStock){
+
+          <ion-toggle (click)="changeStock()" aria-checked="true" [checked]="true" *ngIf="editingProduct() === product"
+            ngDefaultControl> </ion-toggle>
+          } @else {
+          <ion-toggle (click)="changeStock()" aria-checked="false" *ngIf="editingProduct() === product"
+            ngDefaultControl> </ion-toggle>
+          }
+
           <ion-badge *ngIf="editingProduct() !== product" [color]="product.inStock ? 'success' : 'danger'">
             {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
           </ion-badge>

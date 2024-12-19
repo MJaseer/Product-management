@@ -70,8 +70,6 @@ export class HomePage implements OnInit {
 
   }
 
-
-
   // Fetching Products
   loadProducts(event?: InfiniteScrollCustomEvent) {
     this.error.set(null);
@@ -106,6 +104,14 @@ export class HomePage implements OnInit {
 
   // Making Product Editable
   onEdit(product: Product) {
+
+    this.productForm.patchValue({
+      category: product.category,
+      name: product.name,
+      // price:product.price,
+      inStock: product.inStock,
+    })
+
     this.editingProduct.set(product)
   }
 
@@ -137,6 +143,11 @@ export class HomePage implements OnInit {
   onSave(updatedProduct: Product) {
 
     updatedProduct.inStock = this.stockValue()
+
+    if(this.productForm.invalid){
+      this.presentAlert('Add Valid Inputs')
+      return 
+    }
 
     this.productService.updateProducts(updatedProduct).subscribe({
       next: (res: any) => {
